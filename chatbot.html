@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ManoMitra Chatbot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .chat-bubble {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .user-bubble {
+      background-color: #a7f3d0;
+      align-self: flex-end;
+    }
+    .bot-bubble {
+      background-color: #d1fae5;
+      align-self: flex-start;
+    }
+  </style>
+</head>
+<body class="bg-green-50 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white shadow-2xl rounded-xl w-full max-w-2xl p-6 flex flex-col h-[90vh]">
+    <div class="text-center mb-4">
+      <img src="manomitra.jpeg" alt="ManoMitra Logo" class="h-14 mx-auto rounded-lg">
+      <h2 class="text-2xl font-bold text-emerald-700">ManoMitra Assistant</h2>
+      <p class="text-emerald-600">Let's talk and support your journey to a better mind.</p>
+    </div>
+
+    <div id="chat-window" class="flex-1 overflow-y-auto mb-4 p-2 bg-emerald-50 rounded-lg flex flex-col"></div>
+
+    <form id="chat-form" class="flex gap-2">
+      <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 px-4 py-2 border border-emerald-300 rounded-xl focus:outline-none">
+      <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById("chat-window");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+
+    // Add initial greeting
+    addMessage("Hi there! I'm your ManoMitra assistant. How can I help with your cognitive training today?", "bot");
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.className = `chat-bubble ${sender === "user" ? "user-bubble self-end" : "bot-bubble self-start"}`;
+      msg.textContent = text;
+      chatWindow.appendChild(msg);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function getBotResponse(message) {
+      const msg = message.toLowerCase();
+      
+      if (msg.includes("hi") || msg.includes("hello")) {
+        return "Hi there! Ready for today's training?";
+      } else if (msg.includes("tired")) {
+        return "That's okay. Let's take a short mental break. Why not try our Mindfulness Breathing exercise?";
+      } else if (msg.includes("motivate")) {
+        return "You're doing great! One step at a time. Remember, consistent practice leads to improvement in cognitive skills.";
+      } else if (msg.includes("memory")) {
+        return "To improve memory, try the Memory Match or Sequence Recall games. They're designed to enhance short-term and working memory.";
+      } else if (msg.includes("focus")) {
+        return "For better focus, I recommend the Pattern Recognition game or the Mindfulness Breathing exercise. Both are excellent for training attention.";
+      } else if (msg.includes("reaction")) {
+        return "The Reaction Time game is perfect for improving your reflexes and decision-making speed. Try to beat your best time!";
+      } else if (msg.includes("math")) {
+        return "The Math Challenge helps keep your brain active through mental arithmetic. It's great for problem-solving skills too!";
+      } else if (msg.includes("stress") || msg.includes("anxiety")) {
+        return "When feeling stressed, the Mindfulness Breathing exercise can help. Just a few minutes can make a big difference in how you feel.";
+      } else if (msg.includes("progress")) {
+        return "You can track your progress in the Profile section. It shows your skill development and provides personalized recommendations.";
+      } else if (msg.includes("thank")) {
+        return "You're welcome! I'm here anytime you need assistance with your cognitive training.";
+      } else {
+        return "Tell me how you're feeling today or what cognitive skill you'd like to work on. I'm here to help guide your training.";
+      }
+    }
+
+    chatForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const message = chatInput.value.trim();
+      if (!message) return;
+      
+      addMessage(message, "user");
+      const response = getBotResponse(message);
+      
+      setTimeout(() => addMessage(response, "bot"), 600);
+      chatInput.value = "";
+    });
+  </script>
+</body>
+</html>

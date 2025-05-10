@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - ManoMitra</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .image-option img {
+      border: 4px solid transparent;
+      transition: all 0.3s ease;
+      height: 220px;
+      width: 220px;
+      object-fit: cover;
+      margin: auto;
+    }
+
+    /* Enlarge on hover */
+    .image-option img:hover {
+      transform: scale(1.15);
+      cursor: pointer;
+      z-index: 10;
+      position: relative;
+    }
+
+    /* Green border on selection */
+    .image-option img.selected {
+      border-color: #10b981;
+      box-shadow: 0 0 0 4px #d1fae5;
+      transform: scale(1.15);
+      z-index: 5;
+      position: relative;
+    }
+    
+    .alert {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: none;
+    }
+    
+    .alert.show {
+      opacity: 1;
+      display: block;
+    }
+    
+    .alert.success {
+      background-color: #d1fae5;
+      border-color: #10b981;
+      color: #065f46;
+    }
+    
+    .alert.error {
+      background-color: #fee2e2;
+      border-color: #ef4444;
+      color: #b91c1c;
+    }
+    
+    .alert.warning {
+      background-color: #fff7ed;
+      border-color: #f97316;
+      color: #c2410c;
+    }
+    
+    /* Make grid responsive for larger images */
+    @media (max-width: 1024px) {
+      .grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .image-option img {
+        height: 200px;
+        width: 200px;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .grid-cols-3 {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+  </style>
+</head>
+<body class="bg-green-50 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white shadow-2xl rounded-3xl p-8 w-full max-w-4xl">
+    <div class="text-center mb-6">
+      <img src="manomitra.jpeg" alt="ManoMitra Logo" class="h-20 mx-auto rounded-xl mb-4">
+      <h1 class="text-3xl font-bold text-emerald-800">Login to ManoMitra</h1>
+      <p class="text-emerald-700">Select your emotional anchors to login</p>
+    </div>
+
+    <!-- Notification area -->
+    <div id="notification" class="mb-4 p-4 rounded-xl text-center font-medium alert">
+      <!-- Notification text will appear here -->
+    </div>
+
+    <form id="login-form">
+      <label class="block mb-6">
+        <span class="block text-lg text-gray-800 font-medium mb-2">Your Name</span>
+        <input type="text" id="username" placeholder="Enter your username" class="w-full px-4 py-3 border border-emerald-300 rounded-xl focus:ring-2 focus:ring-emerald-400">
+      </label>
+  
+      <!-- Peace Selection -->
+      <div class="mb-8">
+        <p class="text-lg font-semibold text-emerald-700 mb-3">When you're at peace, choose an image:</p>
+        <div class="grid grid-cols-3 gap-6 image-option">
+          <button type="button" onclick="select('calm','boat_lake')" id="calm-boat_lake"><img src="images/boat_lake.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('calm','rocks')" id="calm-rocks"><img src="images/rocks.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('calm','still_water')" id="calm-still_water"><img src="images/still_water.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('calm','tree')" id="calm-tree"><img src="images/tree.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('calm','swan')" id="calm-swan"><img src="images/swan.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('calm','cliff')" id="calm-cliff"><img src="images/cliff.jpg" class="rounded-xl"></button>
+        </div>
+      </div>
+  
+      <!-- Strength Selection -->
+      <div class="mb-8">
+        <p class="text-lg font-semibold text-emerald-700 mb-3">When you're at your strongest, pick an image:</p>
+        <div class="grid grid-cols-3 gap-6 image-option">
+          <button type="button" onclick="select('strong','chain')" id="strong-chain"><img src="images/chain.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('strong','fist')" id="strong-fist"><img src="images/fist.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('strong','elephant')" id="strong-elephant"><img src="images/catherine-zaidova_elephant.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('strong','storm')" id="strong-storm"><img src="images/marcus-woodbridge_storm.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('strong','mother')" id="strong-mother"><img src="images/sippakorn-yamkasikorn_mother_child.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('strong','mountain')" id="strong-mountain"><img src="images/x-mountain_climb.jpg" class="rounded-xl"></button>
+        </div>
+      </div>
+  
+      <!-- Focused Selection -->
+      <div class="mb-8">
+        <p class="text-lg font-semibold text-emerald-700 mb-3">When you're deeply focused, choose one:</p>
+        <div class="grid grid-cols-3 gap-6 image-option">
+          <button type="button" onclick="select('focused','camera')" id="focused-camera"><img src="images/devin-avery-camera.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('focused','leopard')" id="focused-leopard"><img src="images/harshit-suryawanshi-leopard.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('focused','tightrope')" id="focused-tightrope"><img src="images/loic-leray-tight_rope.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('focused','chess')" id="focused-chess"><img src="images/michal-vrba-chess.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('focused','microscope')" id="focused-microscope"><img src="images/thisisengineering-microscope.jpg" class="rounded-xl"></button>
+          <button type="button" onclick="select('focused','archery')" id="focused-archery"><img src="images/woody-kelly-archery.jpg" class="rounded-xl"></button>
+        </div>
+      </div>
+  
+      <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-xl mt-4 text-lg">Login</button>
+    </form>
+
+    <div class="text-center mt-6">
+      <p class="text-sm text-gray-600">Don't have an account?</p>
+      <a href="signup.html" class="text-emerald-600 font-semibold hover:underline">Create Account</a>
+    </div>
+  </div>
+
+  <script>
+    // This is a minimal script for selections, the main logic is in app.js
+    const selections = {
+      calm: '',
+      strong: '',
+      focused: ''
+    };
+    
+    function select(emotion, value) {
+      // First, clear the current selection for this emotion
+      selections[emotion] = value;
+      
+      // Remove 'selected' class from all images in this category
+      document.querySelectorAll(`[id^=${emotion}-] img`).forEach(img => {
+        img.classList.remove('selected');
+      });
+      
+      // Add 'selected' class to the new selection
+      document.querySelector(`#${emotion}-${value} img`).classList.add('selected');
+    }
+  </script>
+  
+  <script src="js/app.js"></script>
+</body>
+</html>

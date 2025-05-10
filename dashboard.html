@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - ManoMitra</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .card {
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Chatbot icon styles */
+    .chatbot-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-icon:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .chatbot-container {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 350px;
+      height: 450px;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+      overflow: hidden;
+      display: none;
+      transition: all 0.3s ease;
+    }
+    
+    .chatbot-container.active {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Progress bar styles */
+    .progress-container {
+      height: 8px;
+      width: 100%;
+      background-color: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-green-50 min-h-screen">
+  <!-- Navigation Bar -->
+  <nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <img src="manomitra.jpeg" alt="ManoMitra Logo" class="h-10 rounded-lg">
+          <span class="ml-2 text-xl font-bold text-emerald-800">ManoMitra</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <a href="dashboard.html" class="text-emerald-800 font-medium hover:text-emerald-600">Home</a>
+          <a href="games.html" class="text-emerald-600 font-medium hover:text-emerald-800">Games</a>
+          <a href="profile.php" class="text-emerald-600 font-medium hover:text-emerald-800">Profile</a>
+          <button onclick="logout()" class="bg-red-50 text-red-500 hover:bg-red-100 px-3 py-1 rounded-lg text-sm font-medium">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Welcome Section -->
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+      <h1 class="text-2xl font-bold text-emerald-800 mb-2">Welcome, <span id="username">User</span>!</h1>
+      <p class="text-emerald-600">Let's continue your journey to a better mind.</p>
+      
+      <!-- Daily Stats -->
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-green-50 p-4 rounded-xl">
+          <h3 class="text-lg font-semibold text-emerald-700">Daily Streak</h3>
+          <div class="flex items-end">
+            <span class="text-3xl font-bold text-emerald-800" id="streak-count">0</span>
+            <span class="ml-2 text-emerald-600">days</span>
+          </div>
+        </div>
+        
+        <div class="bg-green-50 p-4 rounded-xl">
+          <h3 class="text-lg font-semibold text-emerald-700">Games Played</h3>
+          <div class="flex items-end">
+            <span class="text-3xl font-bold text-emerald-800" id="games-count">0</span>
+            <span class="ml-2 text-emerald-600">this week</span>
+          </div>
+        </div>
+        
+        <div class="bg-green-50 p-4 rounded-xl">
+          <h3 class="text-lg font-semibold text-emerald-700">Overall Progress</h3>
+          <div class="mt-2 progress-container">
+            <div class="progress-bar bg-emerald-500" style="width: 0%;"></div>
+          </div>
+          <div class="text-right mt-1">
+            <span class="text-sm font-medium text-emerald-700">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Games Section -->
+    <h2 class="text-xl font-bold text-emerald-800 mb-4">Continue Training</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+      <!-- Game Cards -->
+      <a href="games.html#memory-match" class="card bg-white rounded-xl shadow p-4 text-center" data-game-id="memory-match">
+        <div class="w-16 h-16 mx-auto mb-2 bg-emerald-100 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-emerald-800">Memory Match</h3>
+        <p class="text-sm text-gray-600 mt-2">Improve short-term and working memory</p>
+        <div class="mt-4 progress-container">
+          <div class="progress-bar bg-emerald-500" style="width: 0%;"></div>
+        </div>
+      </a>
+      
+      <a href="games.html#sequence-recall" class="card bg-white rounded-xl shadow p-4 text-center" data-game-id="sequence-recall">
+        <div class="w-16 h-16 mx-auto mb-2 bg-emerald-100 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-emerald-800">Sequence Recall</h3>
+        <p class="text-sm text-gray-600 mt-2">Improve sequential memory and attention span</p>
+        <div class="mt-4 progress-container">
+          <div class="progress-bar bg-emerald-500" style="width: 0%;"></div>
+        </div>
+      </a>
+      
+      <a href="games.html#reaction-time" class="card bg-white rounded-xl shadow p-4 text-center" data-game-id="reaction-time">
+        <div class="w-16 h-16 mx-auto mb-2 bg-emerald-100 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-emerald-800">Reaction Time</h3>
+        <p class="text-sm text-gray-600 mt-2">Test and train fast decision-making and reflexes</p>
+        <div class="mt-4 progress-container">
+          <div class="progress-bar bg-emerald-500" style="width: 0%;"></div>
+        </div>
+      </a>
+      
+      <a href="games.html#math-game" class="card bg-white rounded-xl shadow p-4 text-center" data-game-id="math-game">
+        <div class="w-16 h-16 mx-auto mb-2 bg-emerald-100 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-emerald-800">Math Game</h3>
+        <p class="text-sm text-gray-600 mt-2">Basic mental arithmetic to keep brain active</p>
+        <div class="mt-4 progress-container">
+          <div class="progress-bar bg-emerald-500" style="width: 0%;"></div>
+        </div>
+      </a>
+    </div>
+    
+    <!-- Recent Activity Section -->
+    <h2 class="text-xl font-bold text-emerald-800 mb-4">Recent Activity</h2>
+    <div class="bg-white rounded-xl shadow p-4">
+      <table class="min-w-full">
+        <thead>
+          <tr>
+            <th class="text-left py-2 px-3 text-emerald-700">Game</th>
+            <th class="text-left py-2 px-3 text-emerald-700">Date</th>
+            <th class="text-left py-2 px-3 text-emerald-700">Score</th>
+            <th class="text-left py-2 px-3 text-emerald-700">Progress</th>
+          </tr>
+        </thead>
+        <tbody id="recent-activity-table">
+          <tr class="border-t border-gray-200">
+            <td colspan="4" class="py-4 px-3 text-center text-gray-500">
+              Loading recent activity...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Chatbot Icon -->
+  <div class="chatbot-icon" id="chatbot-toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+    </svg>
+  </div>
+
+  <!-- Chatbot Container -->
+  <div class="chatbot-container" id="chatbot-container">
+    <iframe src="chatbot.html" width="100%" height="100%" frameborder="0"></iframe>
+  </div>
+  
+  <!-- Notification area (hidden by default) -->
+  <div id="notification" class="fixed top-4 right-4 max-w-sm p-4 rounded-xl text-center font-medium alert"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script>
+    // Basic function for logout until app.js is fully loaded
+    function logout() {
+      fetch('logout.php')
+        .then(response => response.json())
+        .then(data => {
+          window.location.href = 'login.html';
+        })
+        .catch(error => {
+          console.error('Logout error:', error);
+          window.location.href = 'login.html'; // Fallback
+        });
+    }
+    
+    // Toggle chatbot
+    document.getElementById('chatbot-toggle').addEventListener('click', function() {
+      const container = document.getElementById('chatbot-container');
+      container.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
